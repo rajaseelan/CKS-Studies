@@ -155,3 +155,45 @@ kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
 
 </details>
+
+## Lab:  Encrypt ETCD at rest
+<details>
+<summary>Encrypt All Secrets in ETCD at rest and test. Use `aescbc` encryption.</summary>
+
+```
+1. Create a 'before secret'
+
+2. Create Encryption Config
+
+3. Add command line parameter
+    In manifests add --encryption-config=/path/to/config
+
+4. Add mount path to kube-apiserver
+    add the directory as a hostPath to the kube-apiserver pod spec
+
+5. restart kube-apiserver
+
+6. Create after secret
+    kubectl create secret generic post-encryption --from-literal=some=value
+
+7. Retrive unecrypted secret
+    ETCDCTL_API=3 etcdctl --endpoint --key --cert --cacert get /registry/secrets/<namespace>/<pre-encryption-secret>
+
+8. Retrieve encrypted secret
+# notice how it is all garbled data
+    ETCDCTL_API=3 etcdctl --endpoint --key --cert --cacert get /registry/secrets/<namespace>/<post-encryption-secret> | hexdump -C 
+
+9. Try removing the plaintext encryption from encryption configration and read uncenrypted secrets
+
+10. Encrypt ALL secrets
+kubectl get secrets -A -oyaml | kubectl replace -f - 
+```
+
+
+</details>
+
+* more secure ways of encrypted secrets can be implemented (i.e Hashicorp Vault)
+
+Relevant Talks:
+* base64 is not encrytion (FOSDEM)
+* Build secure apps faster without secrets
