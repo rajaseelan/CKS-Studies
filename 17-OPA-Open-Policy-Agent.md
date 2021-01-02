@@ -1,5 +1,7 @@
 # Open Policy Agent
 
+** NOTE ** A lot of work to do here
+
 * customized policies
 * Intro to OPA/ Gatekeeper
 * Enforce Labels
