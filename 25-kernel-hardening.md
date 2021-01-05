@@ -105,7 +105,42 @@ Enforce     | Processes canot escape
 <summary>Run docker container with apparmor profile</summary>
 
     docker run --security-opt apparmor=docker-default -d nginx 
-    
+
 </details>
+
+---
+
+## Requirements for running apparmor on k8s
+
+* Container runtime must support AppArmor
+* AppArmor needs to be installed on every node
+* AppArmor profiles need to be available on every node
+* AppAormor profiles are specifed per container
+  * Done using annotations
+
+## Lab: apparmor for k8s
+<details>
+<summary> Use apparmor in k8s </summary>
+
+    # Assuptions - pre-reqa are met
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      annotations:
+        # note the container name and profile on localhost
+        container.apparmor.security.beta.kubernetes.io/<container name> : localhost/<profile_name>
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      
+
+</details>
+
+
 
 # Seccomp
