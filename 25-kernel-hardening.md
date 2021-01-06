@@ -144,3 +144,71 @@ Enforce     | Processes canot escape
 
 
 # Seccomp
+
+* Restrict what kind of syscalls that can be made
+* Application sepcific.
+* Application sets a point where only certain syscalls are needed.
+* If app tries to call another unauthorized syscall from that point onwards, it will be killed.
+* seccomp `strict mode` only the following calls allowed:
+  * read()
+  * write()
+  * exit()
+  * sigreturn()
+
+# seccomp-bpf
+* seccomp + BPF Filters
+* More fine grained control over syscalls
+
+## Lab: Add a seccomp profile to a Docker Container
+<details>
+<summary>Download and install a seccomp profile for docker nginx container</summary>
+
+    docker run --secruity-opt seccomp=default.json nginx
+
+    # experiment removeing writev from the approved syscalls list
+
+</details>
+
+---
+## Lab: Add a seccomp profile to a k8s pod
+<details>
+<summary>Install a seccomp profile for the kubelet</summary>
+
+    # make a seccomp directory for the kubelet
+    /var/lin/kubelet/seccomp/profiles
+
+    # move seccomp profile into directory
+
+    # Add seccomp to the pod definition
+    #
+    # Add it to the securityContext section
+    #
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: audit-pod
+      labels:
+        app: audit-pod
+      spec:
+        securityContext:
+          seccompProfile:
+            type: Localhost
+            localhostProfile: profiles/audit.json
+        containers:
+        - name: test-container
+          image: hashicorp/http-echo:0.2.3
+          args:
+          - "-text=just made syscalls"
+          securityContext:
+            allowPrivilegeEscalation: False
+      
+      # what happens when there is a missong profile
+      CreateContainerError
+
+      # What happens when there is a seccomp violation?
+      RunContainerError
+</details>
+
+# Relevant talks
+* What have syscalls done for you lately? Liz Rice
+* Introduction to Firejail, AppArmor, and SELinux - Aaron Jones
