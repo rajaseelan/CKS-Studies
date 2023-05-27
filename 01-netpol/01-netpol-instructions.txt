@@ -1,0 +1,12 @@
+1. default namespace
+  * create default deny policy
+  enable frontend to talk to backend
+  * enable DNS
+2. enable backend to talk to cassandra/cssandra pod
+
+3. namesspace cassandra - default deny
+
+4. allow traffic on default/pod-backend to cassandra/pod-cassandra
+
+5. rstrict to pod cassandra from default/backend on port 80
+

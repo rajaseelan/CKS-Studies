@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: cassandra
+  name: cassandra
+  namespace: cassandra
+spec:
+  containers:
+  - image: httpd
+    name: cassandra
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
